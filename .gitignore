@@ -1,0 +1,4 @@
+.env
+lambda_files/lambda_locust.zip
+lambda_files/python-packages
+__pycache__
