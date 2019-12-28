@@ -1,9 +1,12 @@
-FROM python:3.6.5
+FROM python:3.6-alpine
 
 LABEL maintainer "Gustavo Gama <gustavobgama@gmail.com>"
 
-RUN apt update && apt install -y \
-    zip
+RUN apk update && apk --no-cache add \
+    git \
+    g++ \
+    zeromq-dev \
+    libffi-dev
 
 RUN pip install --upgrade pip
 
@@ -12,6 +15,10 @@ RUN pip install \
     git+https://github.com/westwingbrasil/locust.git \
     git+https://github.com/westwingbrasil/invokust.git \
     gevent~=1.2.2
+
+RUN apk del git \
+    g++ \
+    libffi-dev
 
 VOLUME ["/opt/loadtests"]
 
