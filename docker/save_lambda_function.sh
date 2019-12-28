@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-export $(xargs < .env)
-
 echo "===> [Start] Copy python dependencies"
 cp -Rf /usr/local/lib/python3.6/site-packages lambda_files/python-packages
 echo "===> [End] Copy python dependencies"
@@ -9,7 +7,7 @@ echo "===> [End] Copy python dependencies"
 echo "===> [Start] Compact files"
 
 rm -rf lambda_files/lambda_locust.zip
-zip -q -r lambda_files/lambda_locust.zip lambda_locust.py locustfile.py lambda_files/python-packages
+zip -q -r lambda_files/lambda_locust.zip lambda_locust.py locustfiles lambda_files/python-packages
 rm -rf lambda_files/python-packages
 
 echo "===> [End] Compact files"

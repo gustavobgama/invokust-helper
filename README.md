@@ -1,48 +1,45 @@
 ## Description
 
-Helper to make easier to run you [locustfile](https://docs.locust.io/en/stable/writing-a-locustfile.html) using [locust](https://locust.io) and [invokust](https://github.com/FutureSharks/invokust) at AWS lambda.
+With this project you can test your [locust](https://locust.io) files easily and fast. If everything is ok you can create a lambda function at AWS and scale your load tests, thanks to [invokust](https://github.com/FutureSharks/invokust).
 
-## How to install
+## Installation
 
-Before proceed you will need [docker](https://docs.docker.com/install/) installed. Then you need to clone the repository:
+Before proceed you will need [docker](https://docs.docker.com/install/) installed.
 
-    $ git clone git@github.com:gustavobgama/invokust-helper.git ./InvokustHelper
+    $ curl -fsSL https://get.docker.com | sh
 
-## How to configure
+Then you can proceed with the installation:
 
+    $ git clone https://github.com/gustavobgama/invokust-helper.git ./InvokustHelper
     $ cd InvokustHelper && cp .env.example .env
+    $ put your aws credentials and customize the other variables at .env file
 
-Then put your aws credentials and customize the other variables at .env file. Next you will **replace the locustfile.py** in the root folder by your real locustfile. The file that comes with this project is just an example.
+## Load test workflow
 
-## How to execute
+First you have to know what locustfile you want to execute, the [locustfiles](https://docs.locust.io/en/stable/quickstart.html#example-locustfile-py) are located at folder `/locustfiles`. Then you have to know the `host url` you want to loadtest. With both information follow the steps:\
 
-The repository has a makefile that allow you the following:
+1. Execute the load test locally using locust.
 
-1. Run the container
+        $ HOST=https://example.com LOCUST_FILE=example.py make local
 
-        $ make run
-
-2. Local test the locustfile (using only locust):
-
-        $ make local
-
-3. Local test the locustfile (using invokust and locust):
-
-        $ make local-invokust
-
-4. Create or update the lambda function:
+2. If everything is ok you can proceed and create the lambda function that will allow more clients and requests to our load test.
 
         $ make create
 
-5. Execute the load test using the lambda function:
+3. Once the lambda is created you can execute your load test with a lot more throughput:
 
-        $ make execute
+        $ HOST=https://example.com LOCUST_FILE=example.py RUN_TIME=200 CLIENTS=100 HATCH_RATE=5 make execute
+
+4. If for any reason you need to check the docker container, then
+
+        $ make run
 
 ### Customizing the execution
 
 Both, the local test and the execute of the lambda function have the possibility of customize its parameters. The parameters are:
 
 * HOST: host where the locust will run the load tests. (default: http://127.0.0.1)
+* LOCUST_FILE: locustfile inside folder `locustfiles` which will be executed. (default: "")
 * CLIENTS: quantity of clients that will be at the same time testing the host. (default: 1)
 * HATCH_RATE: The rate per second in which clients are spawned. (default: 1)
 * RUN_TIME: Time limit for run time (seconds) (default: 60)
